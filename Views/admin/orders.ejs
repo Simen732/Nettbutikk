@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container mt-4">
+    <h1 class="mb-4">Manage Orders</h1>
+    
+    <div class="card mb-4">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0">Orders List</h5>
+          </div>
+          <div class="col-auto">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input filter-status" type="checkbox" id="statusPending" value="pending" checked>
+              <label class="form-check-label" for="statusPending">
+                <span class="badge bg-secondary">Pending</span>
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input filter-status" type="checkbox" id="statusProcessing" value="processing" checked>
+              <label class="form-check-label" for="statusProcessing">
+                <span class="badge bg-warning">Processing</span>
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input filter-status" type="checkbox" id="statusShipped" value="shipped" checked>
+              <label class="form-check-label" for="statusShipped">
+                <span class="badge bg-info">Shipped</span>
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input filter-status" type="checkbox" id="statusDelivered" value="delivered" checked>
+              <label class="form-check-label" for="statusDelivered">
+                <span class="badge bg-success">Delivered</span>
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input filter-status" type="checkbox" id="statusCancelled" value="cancelled" checked>
+              <label class="form-check-label" for="statusCancelled">
+                <span class="badge bg-danger">Cancelled</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <% if(orders && orders.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-striped" id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach(order => { %>
+                  <tr data-status="<%= order.status %>">
+                    <td><%= order._id.toString().slice(-6).toUpperCase() %></td>
+                    <td>
+                      <% if(order.user && order.user.username) { %>
+                        <%= order.user.username %><br>
+                        <small class="text-muted"><%= order.user.email %></small>
+                      <% } else { %>
+                        <span class="text-muted">Unknown user</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <%= new Date(order.createdAt).toLocaleDateString() %><br>
+                      <small class="text-muted"><%= new Date(order.createdAt).toLocaleTimeString() %></small>
+                    </td>
+                    <td><%= order.items.length %> items</td>
+                    <td>$<%= order.totalAmount.toFixed(2) %></td>
+                    <td>
+                      <span class="badge bg-<%= 
+                        order.status === 'delivered' ? 'success' : 
+                        order.status === 'shipped' ? 'info' : 
+                        order.status === 'processing' ? 'warning' : 
+                        order.status === 'cancelled' ? 'danger' : 'secondary' 
+                      %>">
+                        <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                      </span>
+                    </td>
+                    <td>
+                      <div class="btn-group">
+                        <a href="/orders/<%= order._id %>" class="btn btn-sm btn-info">View</a>
+                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                          Update Status
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <form action="/orders/<%= order._id %>/status" method="POST" style="display: inline;">
+                              <input type="hidden" name="status" value="pending">
+                              <button type="submit" class="dropdown-item">Pending</button>
+                            </form>
+                          </li>
+                          <li>
+                            <form action="/orders/<%= order._id %>/status" method="POST" style="display: inline;">
+                              <input type="hidden" name="status" value="processing">
+                              <button type="submit" class="dropdown-item">Processing</button>
+                            </form>
+                          </li>
+                          <li>
+                            <form action="/orders/<%= order._id %>/status" method="POST" style="display: inline;">
+                              <input type="hidden" name="status" value="shipped">
+                              <button type="submit" class="dropdown-item">Shipped</button>
+                            </form>
+                          </li>
+                          <li>
+                            <form action="/orders/<%= order._id %>/status" method="POST" style="display: inline;">
+                              <input type="hidden" name="status" value="delivered">
+                              <button type="submit" class="dropdown-item">Delivered</button>
+                            </form>
+                          </li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li>
+                            <form action="/orders/<%= order._id %>/status" method="POST" style="display: inline;">
+                              <input type="hidden" name="status" value="cancelled">
+                              <button type="submit" class="dropdown-item">Cancelled</button>
+                            </form>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="alert alert-info">No orders found.</div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/footer') %>
+  
+  <script>
+    // Filter orders by status
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterCheckboxes = document.querySelectorAll('.filter-status');
+      const rows = document.querySelectorAll('#ordersTable tbody tr');
+      
+      function filterOrders() {
+        const selectedStatuses = Array.from(filterCheckboxes)
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
+        
+        rows.forEach(row => {
+          const status = row.dataset.status;
+          if (selectedStatuses.includes(status)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+      
+      filterCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', filterOrders);
+      });
+    });
+  </script>
+</body>
+</html>

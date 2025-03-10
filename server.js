@@ -4,10 +4,10 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB successfully'))
@@ -20,10 +20,8 @@ const { orderRoutes } = require('./routes/orderRoutes');
 const { adminRoutes } = require('./routes/adminRoutes');
 
 app.set('view engine', 'ejs');
-// Fix the path to use correct case sensitivity - 'Views' instead of 'views'
 app.set('views', path.join(__dirname, 'Views'));
 
-// Set up cookie-parser BEFORE trying to access cookies
 app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: true }));
