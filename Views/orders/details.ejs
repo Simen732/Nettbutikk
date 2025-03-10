@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col">
+        <h1>Order Details</h1>
+        <p class="text-muted">Order ID: <%= order._id %></p>
+      </div>
+      <div class="col-auto">
+        <a href="/orders/myorders" class="btn btn-secondary">Back to My Orders</a>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Items</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% order.items.forEach(item => { %>
+                    <tr>
+                      <td><%= item.name %></td>
+                      <td>$<%= item.price.toFixed(2) %></td>
+                      <td><%= item.quantity %></td>
+                      <td>$<%= (item.price * item.quantity).toFixed(2) %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Order Summary</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Order Date:</span>
+                <span><%= new Date(order.createdAt).toLocaleDateString() %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Status:</span>
+                <span class="badge bg-<%= 
+                  order.status === 'delivered' ? 'success' : 
+                  order.status === 'shipped' ? 'info' : 
+                  order.status === 'processing' ? 'warning' : 
+                  order.status === 'cancelled' ? 'danger' : 'secondary' 
+                %>">
+                  <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                </span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Payment Method:</span>
+                <span><%= order.paymentMethod === 'credit_card' ? 'Credit Card' : 
+                          order.paymentMethod === 'paypal' ? 'PayPal' : 
+                          order.paymentMethod === 'vipps' ? 'Vipps' : 
+                          order.paymentMethod %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Total:</span>
+                <strong>$<%= order.totalAmount.toFixed(2) %></strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Shipping Address</h5>
+          </div>
+          <div class="card-body">
+            <address class="mb-0">
+              <%= order.shippingAddress.address %><br>
+              <%= order.shippingAddress.city %>, <%= order.shippingAddress.postalCode %><br>
+              <%= order.shippingAddress.country %>
+            </address>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

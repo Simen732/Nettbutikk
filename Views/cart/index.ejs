@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container mt-4">
+    <h1 class="mb-4">Shopping Cart</h1>
+    
+    <% if(cart && cart.items && cart.items.length > 0) { %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-cart">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% cart.items.forEach(item => { %>
+                  <tr>
+                    <td class="align-middle">
+                      <div class="d-flex align-items-center">
+                        <img src="<%= item.product.image %>" alt="<%= item.product.name %>" width="50" height="50" class="me-3">
+                        <div>
+                          <a href="/products/<%= item.product._id %>"><%= item.product.name %></a>
+                          <div class="text-muted small">
+                            <span><%= item.product.category === 't-shirt' ? 'T-Shirt' : 'Sweater' %></span> | 
+                            <span>Size: <%= item.product.size %></span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle">$<%= item.price.toFixed(2) %></td>
+                    <td class="align-middle" style="width: 150px;">
+                      <form action="/cart/update/<%= item._id %>" method="POST" class="quantity-form">
+                        <div class="input-group input-group-sm">
+                          <input 
+                            type="number" 
+                            name="quantity" 
+                            value="<%= item.quantity %>" 
+                            min="1" 
+                            max="<%= item.product.stock %>" 
+                            class="form-control"
+                            onchange="this.form.submit()"
+                          >
+                        </div>
+                      </form>
+                    </td>
+                    <td class="align-middle">$<%= (item.price * item.quantity).toFixed(2) %></td>
+                    <td class="align-middle">
+                      <form action="/cart/remove/<%= item._id %>" method="POST">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <form action="/cart/clear" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Clear Cart</button>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Order Summary</h5>
+              <div class="d-flex justify-content-between mb-3">
+                <span>Subtotal:</span>
+                <strong>$<%= cart.totalAmount.toFixed(2) %></strong>
+              </div>
+              <hr>
+              <div class="d-flex justify-content-between mb-3">
+                <span>Total:</span>
+                <strong>$<%= cart.totalAmount.toFixed(2) %></strong>
+              </div>
+              <a href="/cart/checkout" class="btn btn-primary btn-block w-100">Proceed to Checkout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="alert alert-info">
+        <p>Your cart is empty.</p>
+        <a href="/products" class="btn btn-primary mt-3">Continue Shopping</a>
+      </div>
+    <% } %>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

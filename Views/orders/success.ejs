@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header bg-success text-white">
+            <h3 class="mb-0">Order Placed Successfully!</h3>
+          </div>
+          <div class="card-body">
+            <div class="text-center mb-4">
+              <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+            </div>
+            
+            <h5>Thank you for your order!</h5>
+            <p>Your order has been placed successfully. Order ID: <strong><%= order._id %></strong></p>
+            <p>We'll send a confirmation email to your registered email address shortly.</p>
+            
+            <div class="alert alert-info mt-4">
+              <h6>Order Summary:</h6>
+              <p class="mb-1">Order Date: <%= new Date(order.createdAt).toLocaleString() %></p>
+              <p class="mb-1">Total Amount: $<%= order.totalAmount.toFixed(2) %></p>
+              <p class="mb-0">Payment Method: <%= order.paymentMethod === 'credit_card' ? 'Credit Card' : 
+                                               order.paymentMethod === 'paypal' ? 'PayPal' : 
+                                               order.paymentMethod === 'vipps' ? 'Vipps' : 
+                                               order.paymentMethod %></p>
+            </div>
+            
+            <div class="mt-4 text-center">
+              <a href="/orders/myorders" class="btn btn-primary">View My Orders</a>
+              <a href="/products" class="btn btn-secondary ms-2">Continue Shopping</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container mt-4">
+    <h1 class="mb-4">Admin Dashboard</h1>
+    
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Products</h5>
+            <p class="card-text display-4"><%= productCount %></p>
+            <a href="/admin/products" class="btn btn-primary">Manage Products</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Orders</h5>
+            <p class="card-text display-4"><%= orderCount %></p>
+            <a href="/admin/orders" class="btn btn-primary">Manage Orders</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Recent Orders</h5>
+      </div>
+      <div class="card-body">
+        <% if(recentOrders && recentOrders.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>User</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentOrders.forEach(order => { %>
+                  <tr>
+                    <td><%= order._id.toString().slice(-6).toUpperCase() %></td>
+                    <td><%= order.user ? order.user.username : 'Unknown' %></td>
+                    <td>$<%= order.totalAmount.toFixed(2) %></td>
+                    <td>
+                      <span class="badge bg-<%= 
+                        order.status === 'delivered' ? 'success' : 
+                        order.status === 'shipped' ? 'info' : 
+                        order.status === 'processing' ? 'warning' : 
+                        order.status === 'cancelled' ? 'danger' : 'secondary' 
+                      %>">
+                        <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                      </span>
+                    </td>
+                    <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                    <td>
+                      <a href="/orders/<%= order._id %>" class="btn btn-sm btn-info">View</a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p>No recent orders.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

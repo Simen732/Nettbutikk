@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/Header') %>
+    <%- include('partials/navbar') %>
+<body>
+    <h1>Register</h1>
+    
+    <% if (typeof error !== 'undefined') { %>
+        <div class="error" style="color: red; margin-bottom: 15px;">
+            <%= error %>
+        </div>
+    <% } %>
+    
+    <form action="/auth/register" method="post">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="RepeatPassword">Repeat Password</label>
+            <input type="password" id="RepeatPassword" name="RepeatPassword" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

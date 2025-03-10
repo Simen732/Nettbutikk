@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container mt-4">
+    <h1 class="mb-4">Add New Product</h1>
+    
+    <div class="card">
+      <div class="card-body">
+        <form action="/products" method="POST">
+          <div class="mb-3">
+            <label for="name" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="price" class="form-label">Price ($)</label>
+              <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="stock" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="stock" name="stock" min="0" required>
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" id="category" name="category" required>
+                <option value="" selected disabled>Choose category</option>
+                <option value="t-shirt">T-Shirt</option>
+                <option value="sweater">Sweater</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="size" class="form-label">Size</label>
+              <select class="form-select" id="size" name="size" required>
+                <option value="" selected disabled>Choose size</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="color" class="form-label">Color</label>
+            <input type="text" class="form-control" id="color" name="color" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="image" class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="image" name="image" 
+                   placeholder="https://example.com/image.jpg" required>
+            <div class="form-text">Enter a valid URL for the product image</div>
+          </div>
+          
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="featured" name="featured">
+            <label class="form-check-label" for="featured">Featured product</label>
+          </div>
+          
+          <div class="d-flex justify-content-between">
+            <a href="/admin/products" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Add Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

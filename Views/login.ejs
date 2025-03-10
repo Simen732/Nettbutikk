@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/Header') %>
+    <%- include('partials/navbar') %>
+<body>
+    <h1>Login</h1>
+    
+    <% if (typeof error !== 'undefined') { %>
+        <div class="error">
+            <%= error %>
+        </div>
+    <% } %>
+    
+    <form action="/auth/login" method="post">
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    
+    <p>Don't have an account? <a href="/auth/register">Register</a></p>
+</body>
+</html>

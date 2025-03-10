@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header') %>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h1 class="display-4">Welcome to our T-Shirt & Sweater Shop</h1>
+      <p class="lead">Quality clothing at affordable prices</p>
+      <hr class="my-4">
+      <p>Browse our collection of high-quality T-shirts and sweaters.</p>
+      <div class="d-flex gap-2">
+        <a class="btn btn-primary btn-lg" href="/products/category/t-shirt" role="button">Shop T-Shirts</a>
+        <a class="btn btn-secondary btn-lg" href="/products/category/sweater" role="button">Shop Sweaters</a>
+      </div>
+    </div>
+
+    <h2 class="my-4">Featured Products</h2>
+    
+    <div class="row">
+      <% if(featuredProducts && featuredProducts.length > 0) { %>
+        <% featuredProducts.forEach(product => { %>
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img src="<%= product.image %>" class="card-img-top" alt="<%= product.name %>">
+              <div class="card-body">
+                <h5 class="card-title"><%= product.name %></h5>
+                <p class="card-text"><%= product.description.substring(0, 100) %>...</p>
+                <p class="card-text"><strong>$<%= product.price.toFixed(2) %></strong></p>
+                <p class="card-text">
+                  <span class="badge bg-secondary"><%= product.category === 't-shirt' ? 'T-Shirt' : 'Sweater' %></span>
+                  <span class="badge bg-info"><%= product.size %></span>
+                  <span class="badge bg-light text-dark"><%= product.color %></span>
+                </p>
+                <a href="/products/<%= product._id %>" class="btn btn-primary">View Details</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-12">
+          <p>No featured products available at the moment.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
